@@ -8,17 +8,7 @@ from selenium import webdriver  # to control browser operations
 import time
 from selenium.webdriver.chrome.options import Options
 
-#for selenium initz
-"""
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--window-size=1920x1080")
-"""
 num = 1
-#PATH ="C:\Program Files (x86)\chromedriver.exe"
-
-#driver = webdriver.Chrome(options=chrome_options,executable_path=PATH)
-#driver = webdriver.Chrome(PATH)
 
 def assistant_speaks(output):
 	global num
@@ -138,11 +128,6 @@ def process_text(input):
 
 
 def search_web(input):
-	#driver = webdriver.Firefox()
-	#driver = webdriver.Chrome(PATH)
-	#driver.implicitly_wait(1)
-	#driver.maximize_window()
-	print("search_web called")
 
 	if 'youtube' in input:
 		assistant_speaks("Opening in youtube")
@@ -153,34 +138,20 @@ def search_web(input):
 		query = query.replace('search','')
 		query = query.replace('on','')
 		pywhatkit.playonyt(query)
-		#driver.get("http://www.youtube.com/results?search_query =" + '+'.join(query))
-		#driver.get("https://www.youtube.com/")
-		#enter = driver.find_element_by_xpath("""/html/body/ytd-app/div/div/ytd-masthead/div[3]/div[2]/ytd-searchbox/form/div/div[1]/input""")
-		"""
-		enter.send_keys(query)
-		enter.submit()
-		time.sleep(10)
-		"""
 		return
 
 	elif 'wikipedia' in input:
 		assistant_speaks("Here is your search from Wikipedia")
-		#indx = input.lower().split().index('wikipedia')
-		#query = input.split()[indx + 1:]
 		query = input.replace('wikipedia','')
-		pywhatkit.info(query,lines=10)
-		#driver.get("https://en.wikipedia.org/wiki/" + '_'.join(query))
+		pywhatkit.info(query,lines=5)
 		return
 
 	else:
-			#indx = input.lower().split().index('google')
-			#query = input.split()[indx + 1:]
 		assistant_speaks("here is your search result")
 		query = input.replace("search",'')
 		query = query.replace("google",'')
 		pywhatkit.search(query)
 		time.sleep(15)
-			#driver.get("https://www.google.com/search?q =" + '+'.join(query))
 		return
 # function used to open application
 # present inside the system.
@@ -246,11 +217,4 @@ if __name__ == "__main__":
 
 		# calling process text to process the query
 		process_text(text)
-		time.sleep(10)
-		"""
-		assistant_speaks("Should I Continue\n")
-		text = get_audio().lower()
-		if "exit" in str(text) or "bye" in str(text) or "no" in str(text):
-			assistant_speaks("OK bye "+ name)
-			break
-		"""
+		time.sleep(10) #can reduce it to increase speed
