@@ -88,6 +88,17 @@ def process_text(input):
 			pywhatkit.search('geeksforgeeks')
 			return
 
+		elif "what" in input or "who" in input:
+			try:
+				app_id = "3XL874-4GXR8EVV89"  # my wolframaplha id
+				client = wolframalpha.Client(app_id)
+				res = client.query(input)
+				answer = next(res.results).text
+				assistant_speaks(answer)
+				return
+			except BaseException as e:
+				print(e)
+
 		elif "calculate" in input.lower():
 			# write your wolframalpha app_id here #working
 			print("calculate called")
@@ -110,12 +121,15 @@ def process_text(input):
 			return
 
 		else:
-			assistant_speaks("I can search the web for you, Do you want to continue?")
-			ans = get_audio()
-			if 'yes' in str(ans) or 'yeah' in str(ans):
-				search_web(input)
-			else:
+			try:
+				app_id = "3XL874-4GXR8EVV89"  # my wolframaplha id
+				client = wolframalpha.Client(app_id)
+				res = client.query(input)
+				answer = next(res.results).text
+				assistant_speaks(answer)
 				return
+			except BaseException as e:
+				print(e)
 	except:
 		assistant_speaks("I don't understand, I can search the web for you, Do you want to continue?")
 		ans = get_audio()
