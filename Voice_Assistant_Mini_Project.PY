@@ -15,7 +15,7 @@ def assistant_speaks(output):
 	# num to rename every audio file
 	# with different name to remove ambiguity
 	num += 1
-	#print("Assistant : ", output)
+	#assistant_text("Assistant : ", output)
 
 	toSpeak = gTTS(text=output, lang='en', slow=False)
 	# saving the audio file given by google text to speech
@@ -23,8 +23,9 @@ def assistant_speaks(output):
 	toSpeak.save(file)
 
 	# playsound package is used to play the same file.
-	print("Assistant : ", output)
+	assistant_text(f"Assistant : {output}")
 	playsound.playsound(file, True)
+	assistant_text(f"Assistant : {output}")
 	os.remove(file)
 
 
@@ -33,14 +34,14 @@ def get_audio():
 	audio = ''
 
 	with sr.Microphone() as source:
-		print("Speak...")
+		assistant_text("Speak...")
 		# recording the audio using speech recognition
 		audio = rObject.listen(source, phrase_time_limit=5)
-	print("Stop.")  # limit 5 secs
+		assistant_text("Stop.")  # limit 5 secs
 
 	try:
 		text = rObject.recognize_google(audio, language='en-US')
-		print("You : ", text)
+		assistant_text(f"You : {text}")
 		return text
 	except:
 
@@ -87,11 +88,11 @@ def process_text(input):
 				assistant_speaks(answer)
 				return
 			except BaseException as e:
-				print(e)
+				assistant_text(e)
 
 		elif "calculate" in input.lower():
 			# write your wolframalpha app_id here #working
-			print("calculate called")
+			assistant_text("calculate called")
 			try:
 				app_id = "3XL874-4GXR8EVV89"  # my wolframaplha id
 				client = wolframalpha.Client(app_id)
@@ -102,7 +103,7 @@ def process_text(input):
 				assistant_speaks("The answer is " + answer)
 				return
 			except BaseException as e:
-				print(e)
+				assistant_text(e)
 
 		elif "open" in input:
 			# another function to open
@@ -119,7 +120,7 @@ def process_text(input):
 				assistant_speaks(answer)
 				return
 			except BaseException as e:
-				print(e)
+				assistant_text(e)
 	except:
 		assistant_speaks("I don't understand, I can search the web for you, Do you want to continue?")
 		ans = get_audio()
@@ -196,25 +197,52 @@ def open_application(input):
 		pywhatkit.search(query)
 		return
 # Driver Code
-if __name__ == "__main__":
-	assistant_speaks("Hi, I am Your Assistant. What's your name?")
-	name = 'human'
-	name = get_audio()
-	assistant_speaks("Hi, " + name)
-	while (1):
-		assistant_speaks("What can i do for you?")
+def startListen():
+	if (num==1):
+		assistant_speaks("Hi, I am Your Assistant. What's your name?")
+		name = 'human'
+		name = get_audio()
+		assistant_speaks("Hi, " + name)
+	assistant_speaks("What can i do for you?")
+	text = get_audio().lower()
+	if "thank" in str(text):
+		assistant_speaks("It is my pleasure to help you. What can I do for you now")
 		text = get_audio().lower()
+	if "exit" in str(text) or "bye" in str(text) or "sleep" in str(text):
+		assistant_speaks("Ok bye " + name)
+		time.sleep(2)
+		window.destroy()
 
-		if text == 0:
-			continue
+	# calling process text to process the query
+	process_text(text)
 
-		if "thank" in str(text):
-			assistant_speaks("It is my pleasure to help you. What can I do for you now")
-			text = get_audio().lower()
-		if "exit" in str(text) or "bye" in str(text) or "sleep" in str(text):
-			assistant_speaks("Ok bye " + name)
-			break
 
-		# calling process text to process the query
-		process_text(text)
-		time.sleep(10) #can reduce it to increase speed
+
+
+
+
+
+from tkinter import *
+import tkinter as tk
+# from Voice_Assistant_Mini_Project import *
+window=Tk()
+
+def assistant_text(stri):
+	l1.configure(text=stri)
+	window.update()
+    
+window.geometry('450x200')
+# window.minsize(400,400)
+# window.maxsize(400,400)
+window.title('ASSISTANT')
+f1=Frame(window,height=300,width=250,borderwidth=5,relief=SUNKEN,bg='black')
+f1.pack(side=TOP)
+# can_wid=Canvas(f1,height=300,width=270,bg='black')
+# can_wid.grid(row=1,column=0)
+l1=Label(f1,height=3,text='hey there i am your assistant press listen to perform action',font='16',fg='white',bg='black')
+l1.pack(side=TOP)
+f2=Frame(window,height=400,width=200,borderwidth=5,relief=SUNKEN,bg='black')
+f2.pack(side=BOTTOM,fill=X)
+b1=Button(f2,height=3,text="Listen",bg='grey',command=startListen)
+b1.pack(side=BOTTOM,fill=X)
+window.mainloop()
